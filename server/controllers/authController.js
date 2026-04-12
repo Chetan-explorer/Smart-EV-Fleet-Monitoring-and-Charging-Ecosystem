@@ -6,7 +6,7 @@ const generateToken = require('../utils/generateToken');
 // @access  Public
 const registerUser = async (req, res) => {
     try {
-        const { name, email, password, role, vehicleData } = req.body;
+        const { name, email, password, role, vehicleNumber, vehicleModel } = req.body;
 
         // Domain validations
         const assignedRole = role || 'User'; // Default to User
@@ -32,7 +32,8 @@ const registerUser = async (req, res) => {
             email,
             password,
             role: assignedRole,
-            vehicleData: assignedRole === 'User' ? (vehicleData || '') : undefined
+            vehicleNumber: assignedRole === 'User' ? (vehicleNumber || '') : undefined,
+            vehicleModel: assignedRole === 'User' ? (vehicleModel || '') : undefined
         });
 
         if (user) {
@@ -41,6 +42,8 @@ const registerUser = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                vehicleNumber: user.vehicleNumber,
+                vehicleModel: user.vehicleModel,
                 token: generateToken(user._id),
             });
         } else {
@@ -66,6 +69,8 @@ const loginUser = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                vehicleNumber: user.vehicleNumber,
+                vehicleModel: user.vehicleModel,
                 token: generateToken(user._id),
             });
         } else {
@@ -88,14 +93,29 @@ const getUserProfile = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
+            vehicleNumber: user.vehicleNumber,
+            vehicleModel: user.vehicleModel,
         });
     } else {
         res.status(404).json({ message: 'User not found' });
     }
 };
 
+// @desc    Get all users
+// @route   GET /api/auth/
+// @access  Private (Admin)
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find({}).select('-password');
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     registerUser,
     loginUser,
-    getUserProfile
+    getUserProfile,
+    getAllUsers
 };

@@ -6,27 +6,31 @@ const BookingSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    vehicleModel: {
+        type: String,
+        required: true
+    },
     stationId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ChargingStation',
         required: true
     },
-    vehicle: {
-        type: String, // Vehicle details or license plate for the user
+    bookingDate: {
+        type: Date,
         required: true
     },
     startTime: {
         type: Date,
         required: true
     },
-    estimatedEndTime: {
+    endTime: {
         type: Date,
         required: true
     },
     status: {
         type: String,
-        enum: ['scheduled', 'charging', 'completed', 'cancelled'],
-        default: 'scheduled'
+        enum: ['active', 'completed', 'cancelled'],
+        default: 'active'
     }
 }, {
     timestamps: true
