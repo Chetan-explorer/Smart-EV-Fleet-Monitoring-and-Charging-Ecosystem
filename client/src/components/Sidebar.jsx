@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { LayoutDashboard, Car, Map as MapIcon, LogOut, Settings, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Car, Map as MapIcon, LogOut, Settings, ChevronLeft, ChevronRight, UserCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -23,7 +23,8 @@ const Sidebar = () => {
         navItems.push(
             { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
             { name: 'Fleet Vehicles', path: '/dashboard/vehicles', icon: Car },
-            { name: 'Multi-Map View', path: '/dashboard/map', icon: MapIcon }
+            { name: 'Multi-Map View', path: '/dashboard/map', icon: MapIcon },
+            { name: 'Users', path: '/dashboard/users', icon: UserCircle }
         );
     } else if (user?.role === 'FleetManager') {
         navItems.push(
@@ -33,7 +34,8 @@ const Sidebar = () => {
     } else if (user?.role === 'User') {
         navItems.push(
             { name: 'Find Stations', path: '/dashboard', icon: MapIcon },
-            { name: 'My Bookings', path: '#', icon: Car }
+            { name: 'My Bookings', path: '/dashboard/bookings', icon: Car },
+            { name: 'My Profile', path: '/dashboard/profile', icon: UserCircle }
         );
     }
 

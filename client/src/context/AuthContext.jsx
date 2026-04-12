@@ -29,18 +29,18 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const register = async (name, email, password, role, vehicleData) => {
-        const { data } = await axios.post('/api/auth/register', { name, email, password, role, vehicleData });
+    const register = async (name, email, password, role, vehicleNumber, vehicleModel) => {
+        const { data } = await axios.post('/api/auth/register', { name, email, password, role, vehicleNumber, vehicleModel });
         setToken(data.token);
         localStorage.setItem('token', data.token);
-        setUser({ _id: data._id, name: data.name, email: data.email, role: data.role });
+        setUser({ _id: data._id, name: data.name, email: data.email, role: data.role, vehicleNumber: data.vehicleNumber, vehicleModel: data.vehicleModel });
     };
 
     const login = async (email, password) => {
         const { data } = await axios.post('/api/auth/login', { email, password });
         setToken(data.token);
         localStorage.setItem('token', data.token);
-        setUser({ _id: data._id, name: data.name, email: data.email, role: data.role });
+        setUser({ _id: data._id, name: data.name, email: data.email, role: data.role, vehicleNumber: data.vehicleNumber, vehicleModel: data.vehicleModel });
     };
 
     const logout = () => {

@@ -59,12 +59,16 @@ const Dashboard = () => {
         }
         const fetchDashboardData = async () => {
             try {
-                const [metricsRes, trendsRes] = await Promise.all([
+                const [metricsRes, trendsRes, bookingsRes] = await Promise.all([
                     axios.get('/api/vehicles/metrics/summary'),
-                    axios.get('/api/analytics/battery-trends')
+                    axios.get('/api/analytics/battery-trends'),
+                    axios.get('/api/analytics/bookings')
                 ]);
                 setMetrics(metricsRes.data);
                 setTrends(trendsRes.data);
+                if (bookingsRes.data) {
+                    setMetrics(m => ({ ...m, totalBookings: bookingsRes.data.totalBookings }));
+                }
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
             } finally {
@@ -95,13 +99,16 @@ const Dashboard = () => {
                 <p className="text-textMuted text-sm">Overview of your EV fleet operations</p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 lg:grid-cols-3 gap-6">
                 <StatCard delay={0.1} title="Total Vehicles" value={metrics.total} icon={Car} colorClass="bg-blue-500" />
                 <StatCard delay={0.2} title="Active Route" value={metrics.active} icon={CheckCircle2} colorClass="bg-emerald-500" />
                 <StatCard delay={0.3} title="Currently Charging" value={metrics.charging} icon={Zap} colorClass="bg-amber-500" />
                 <StatCard delay={0.4} title="Idle Need Action" value={metrics.idle} icon={AlertCircle} colorClass="bg-red-500" />
                 {user?.role === 'Admin' && (
-                    <StatCard delay={0.5} title="Avg Fleet Battery" value={`${metrics.avgBattery}%`} icon={Zap} colorClass="bg-purple-500" subtitle={metrics.avgBattery < 30 ? "Needs Charging" : "Healthy"} />
+                    <>
+                        <StatCard delay={0.5} title="Avg Fleet Battery" value={`${metrics.avgBattery}%`} icon={Zap} colorClass="bg-purple-500" subtitle={metrics.avgBattery < 30 ? "Needs" : "Healthy"} />
+                        <StatCard delay={0.6} title="Total Bookings (24h)" value={metrics.totalBookings || 0} icon={CheckCircle2} colorClass="bg-indigo-500" />
+                    </>
                 )}
             </div>
 

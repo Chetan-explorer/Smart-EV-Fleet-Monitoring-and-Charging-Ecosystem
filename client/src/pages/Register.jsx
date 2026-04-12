@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { KeyRound, Mail, Zap, User as UserIcon } from 'lucide-react';
+import { KeyRound, Mail, Zap, User as UserIcon, Car } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Register = () => {
@@ -9,7 +9,8 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('User');
-    const [vehicleData, setVehicleData] = useState('');
+    const [vehicleNumber, setVehicleNumber] = useState('');
+    const [vehicleModel, setVehicleModel] = useState('');
     const [error, setError] = useState('');
     const { register } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ const Register = () => {
         }
 
         try {
-            await register(name, email, password, role, vehicleData);
+            await register(name, email, password, role, vehicleNumber, vehicleModel);
             navigate('/dashboard');
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to register');
@@ -143,18 +144,31 @@ const Register = () => {
                         </div>
                         
                         {role === 'User' && (
-                             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
+                             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="space-y-4">
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <UserIcon className="h-5 w-5 text-textMuted" />
+                                        <Car className="h-5 w-5 text-textMuted" />
                                     </div>
                                     <input
                                         type="text"
                                         required
-                                        value={vehicleData}
-                                        onChange={(e) => setVehicleData(e.target.value)}
+                                        value={vehicleNumber}
+                                        onChange={(e) => setVehicleNumber(e.target.value)}
                                         className="appearance-none rounded-xl relative block w-full px-3 pl-10 py-3 border border-slate-600 bg-slate-800/50 text-text focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm transition-all"
-                                        placeholder="License Plate / Vehicle Model"
+                                        placeholder="Vehicle Number"
+                                    />
+                                </div>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <Zap className="h-5 w-5 text-textMuted" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={vehicleModel}
+                                        onChange={(e) => setVehicleModel(e.target.value)}
+                                        className="appearance-none rounded-xl relative block w-full px-3 pl-10 py-3 border border-slate-600 bg-slate-800/50 text-text focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm transition-all"
+                                        placeholder="Vehicle Model"
                                     />
                                 </div>
                              </motion.div>

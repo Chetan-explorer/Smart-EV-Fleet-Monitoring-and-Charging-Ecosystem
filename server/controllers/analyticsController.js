@@ -1,5 +1,6 @@
 const BatteryData = require('../models/BatteryData');
 const ChargingSession = require('../models/ChargingSession');
+const Booking = require('../models/Booking');
 
 // @desc    Get battery trends
 // @route   GET /api/analytics/battery-trends
@@ -35,7 +36,39 @@ const getSessionAnalytics = async (req, res) => {
     }
 };
 
+// @desc    Get booking analytics for admin dashboard
+// @route   GET /api/analytics/bookings
+// @access  Private (Admin)
+const getBookingAnalytics = async (req, res) => {
+    try {
+        const totalBookings = await Booking.countDocuments();
+        
+        // Mock peak booking hours and station usage trends for UI display
+        const peakHours = [
+            { hour: '08:00', bookings: 12 },
+            { hour: '12:00', bookings: 30 },
+            { hour: '15:00', bookings: 45 },
+            { hour: '18:00', bookings: 20 }
+        ];
+
+        const stationUsageTrends = [
+            { name: 'Station A', usage: 80 },
+            { name: 'Station B', usage: 45 },
+            { name: 'Station C', usage: 60 }
+        ];
+
+        res.json({
+            totalBookings,
+            peakHours,
+            stationUsageTrends
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getBatteryTrends,
-    getSessionAnalytics
+    getSessionAnalytics,
+    getBookingAnalytics
 };

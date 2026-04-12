@@ -7,6 +7,9 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import MapView from './pages/Map';
 import Vehicles from './pages/Vehicles';
+import UserProfile from './pages/UserProfile';
+import MyBookings from './pages/MyBookings';
+import Users from './pages/Users';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -22,6 +25,9 @@ function AnimatedRoutes() {
           <Route index element={<Dashboard />} />
           <Route path="vehicles" element={<Vehicles />} />
           <Route path="map" element={<MapView />} />
+          <Route path="profile" element={<UserProfile />} />
+          <Route path="bookings" element={<MyBookings />} />
+          <Route path="users" element={<Users />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

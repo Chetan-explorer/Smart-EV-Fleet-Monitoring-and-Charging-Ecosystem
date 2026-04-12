@@ -26,7 +26,11 @@ const UserSchema = new mongoose.Schema({
         enum: ['Admin', 'FleetManager', 'User'],
         default: 'FleetManager'
     },
-    vehicleData: {
+    vehicleNumber: {
+        type: String,
+        default: ''
+    },
+    vehicleModel: {
         type: String,
         default: ''
     }
