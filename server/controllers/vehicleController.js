@@ -1,22 +1,33 @@
 const User = require('../models/User');
+const Booking = require('../models/Booking');
 
 // @desc    Get all vehicles (mapped from Users)
 // @route   GET /api/vehicles
 // @access  Private (Admin & FleetManager)
 const getVehicles = async (req, res) => {
     try {
-        const users = await User.find({ role: 'User', vehicleNumber: { $ne: '' } });
+        const users = await User.find({ role: 'User', vehicleNumber: { $ne: '' } }).lean();
+        const allBookings = await Booking.find({}).lean();
         
-        // Map user to vehicle payload schema expected by frontend
-        const vehicles = users.map(u => ({
-            _id: u._id,
-            vehicleId: u.name, // Display owner name instead of generic ID
-            vehicleNumber: u.vehicleNumber,
-            model: u.vehicleModel,
-            batteryCapacity: u.batteryCapacity || 100,
-            status: u.vehicleStatus || 'idle',
-            email: u.email
-        }));
+        const vehicles = users.map(u => {
+            const userBookings = allBookings.filter(b => b.userId.toString() === u._id.toString());
+            let lastActive = null;
+            if (userBookings.length > 0) {
+                const sorted = [...userBookings].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+                lastActive = sorted[0].createdAt;
+            }
+
+            return {
+                _id: u._id,
+                vehicleId: u.name,
+                vehicleNumber: u.vehicleNumber,
+                model: u.vehicleModel,
+                status: u.vehicleStatus || 'idle',
+                email: u.email,
+                totalSessions: userBookings.length,
+                lastActive
+            };
+        });
 
         res.json(vehicles);
     } catch (error) {
@@ -34,16 +45,11 @@ const getVehicleMetrics = async (req, res) => {
         const charging = await User.countDocuments({ role: 'User', vehicleStatus: 'charging' });
         const idle = await User.countDocuments({ role: 'User', vehicleStatus: 'idle' });
 
-        const users = await User.find({ role: 'User', vehicleNumber: { $ne: '' } });
-        const avgBattery = users.length > 0 ? 
-            (users.reduce((acc, curr) => acc + (curr.batteryCapacity || 100), 0) / users.length).toFixed(1) : 0;
-
         res.json({
             total,
             active,
             charging,
-            idle,
-            avgBattery: Number(avgBattery)
+            idle
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -56,12 +62,11 @@ const getVehicleMetrics = async (req, res) => {
 const updateVehicle = async (req, res) => {
     try {
         // We only allow updating the vehicle aspects of the user account from the Vehicle screen.
-        const { vehicleNumber, model, batteryCapacity, status } = req.body;
+        const { vehicleNumber, model, status } = req.body;
         
         const updateData = {};
         if (vehicleNumber !== undefined) updateData.vehicleNumber = vehicleNumber;
         if (model !== undefined) updateData.vehicleModel = model;
-        if (batteryCapacity !== undefined) updateData.batteryCapacity = batteryCapacity;
         if (status !== undefined) updateData.vehicleStatus = status;
 
         const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
@@ -72,7 +77,6 @@ const updateVehicle = async (req, res) => {
                 vehicleId: updatedUser.name,
                 vehicleNumber: updatedUser.vehicleNumber,
                 model: updatedUser.vehicleModel,
-                batteryCapacity: updatedUser.batteryCapacity,
                 status: updatedUser.vehicleStatus
             });
         } else {
@@ -91,8 +95,7 @@ const deleteVehicle = async (req, res) => {
         const user = await User.findByIdAndUpdate(req.params.id, {
             vehicleNumber: '',
             vehicleModel: '',
-            vehicleStatus: 'idle',
-            batteryCapacity: 100
+            vehicleStatus: 'idle'
         });
 
         if (user) {
