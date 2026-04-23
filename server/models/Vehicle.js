@@ -23,10 +23,6 @@ const VehicleSchema = new mongoose.Schema({
         enum: ['charging', 'idle', 'active'],
         default: 'idle'
     },
-    location: {
-        lat: { type: Number },
-        lng: { type: Number }
-    },
     lastUpdated: {
         type: Date,
         default: Date.now

@@ -30,8 +30,8 @@ const createBooking = async (req, res) => {
             ]
         });
 
-        if (overlapping.length > 0) {
-            return res.status(400).json({ message: 'Time slot overlaps with an existing booking' });
+        if (overlapping.length >= station.capacity) {
+            return res.status(400).json({ message: 'All charging ports are occupied for this time slot' });
         }
 
         const booking = await Booking.create({
