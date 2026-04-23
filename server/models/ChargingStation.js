@@ -10,6 +10,12 @@ const ChargingStationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    capacity: {
+        type: Number,
+        required: true,
+        min: 1,
+        default: 1
+    },
     location: {
         lat: {
             type: Number,

@@ -33,6 +33,15 @@ const UserSchema = new mongoose.Schema({
     vehicleModel: {
         type: String,
         default: ''
+    },
+    batteryCapacity: {
+        type: Number,
+        default: 100
+    },
+    vehicleStatus: {
+        type: String,
+        enum: ['idle', 'active', 'charging'],
+        default: 'idle'
     }
 }, {
     timestamps: true

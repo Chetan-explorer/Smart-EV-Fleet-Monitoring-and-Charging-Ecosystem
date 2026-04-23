@@ -22,19 +22,19 @@ const Sidebar = () => {
     if (user?.role === 'Admin') {
         navItems.push(
             { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+            { name: 'Stations Mgt', path: '/dashboard/stations', icon: MapIcon },
             { name: 'Fleet Vehicles', path: '/dashboard/vehicles', icon: Car },
-            { name: 'Multi-Map View', path: '/dashboard/map', icon: MapIcon },
             { name: 'Users', path: '/dashboard/users', icon: UserCircle }
         );
     } else if (user?.role === 'FleetManager') {
         navItems.push(
-            { name: 'Overview', path: '/dashboard', icon: LayoutDashboard },
-            { name: 'Map View', path: '/dashboard/map', icon: MapIcon }
+            { name: 'Overview', path: '/dashboard', icon: LayoutDashboard }
         );
     } else if (user?.role === 'User') {
         navItems.push(
-            { name: 'Find Stations', path: '/dashboard', icon: MapIcon },
+            { name: 'All Stations list', path: '/dashboard', icon: LayoutDashboard },
             { name: 'My Bookings', path: '/dashboard/bookings', icon: Car },
+            { name: 'Map', path: '/dashboard/map', icon: MapIcon },
             { name: 'My Profile', path: '/dashboard/profile', icon: UserCircle }
         );
     }

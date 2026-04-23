@@ -19,12 +19,10 @@ const BookingModal = ({ isOpen, onClose, station, onConfirm }) => {
         const startDateTime = new Date(`${bookingDate}T${startTime}:00`);
         const now = new Date();
         
-        // Ensure minimum gap of 30 minutes between current time and selected start time
         if (startDateTime - now < 30 * 60 * 1000) {
             return alert('There must be a minimum gap of 30 minutes from the current time.');
         }
 
-        // Auto-assign a 1-hour session default for endTime since it's removed from UI
         const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
 
         onConfirm({
@@ -36,7 +34,6 @@ const BookingModal = ({ isOpen, onClose, station, onConfirm }) => {
         });
     };
 
-    // Calculate today's date for the min attribute (disallow past dates)
     const tzOffset = (new Date()).getTimezoneOffset() * 60000;
     const localISOTime = (new Date(Date.now() - tzOffset)).toISOString().slice(0, -1);
     const minDateString = localISOTime.split('T')[0];
@@ -124,6 +121,8 @@ const UserStations = () => {
         };
 
         fetchNearby();
+        const interval = setInterval(fetchNearby, 5000);
+        return () => clearInterval(interval);
     }, []);
 
     const handleBookNow = (station) => {
@@ -169,13 +168,12 @@ const UserStations = () => {
                         <div className="flex justify-between items-start mb-4">
                             <div>
                                 <h3 className="text-xl font-bold text-text flex items-center space-x-2">
-                                    <MapPin className="text-primary w-5 h-5" />
+                                    <MapPin className="text-primary w-5 h-5 flex-shrink-0" />
                                     <span>{station.name}</span>
                                 </h3>
-                                <p className="text-sm text-textMuted mt-1">lat: {station.location.lat.toFixed(3)}, lng: {station.location.lng.toFixed(3)}</p>
                             </div>
                             
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                            <span className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-bold border ${
                                 station.crowdedness === 'High' ? 'bg-red-500/10 border-red-500 text-red-500' :
                                 station.crowdedness === 'Moderate' ? 'bg-amber-500/10 border-amber-500 text-amber-500' :
                                 'bg-emerald-500/10 border-emerald-500 text-emerald-500'
@@ -185,18 +183,34 @@ const UserStations = () => {
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 mt-6">
-                            <div className="bg-slate-800/50 p-4 rounded-xl flex items-center space-x-3">
-                                <Car className="text-textMuted w-5 h-5" />
+                            <div className="bg-slate-800/50 p-3 rounded-xl flex items-center space-x-3">
+                                <Zap className="text-emerald-400 w-5 h-5 flex-shrink-0" />
                                 <div>
-                                    <p className="text-xs text-textMuted">Vehicles Queued</p>
-                                    <p className="text-lg font-bold text-text">{station.activeBookingsCount}</p>
+                                    <p className="text-xs text-textMuted leading-tight">Available Slots</p>
+                                    <p className="text-lg font-bold text-emerald-400">{station.availableSlots}</p>
                                 </div>
                             </div>
                             
-                            <div className="bg-slate-800/50 p-4 rounded-xl flex items-center space-x-3">
-                                <Clock className="text-textMuted w-5 h-5" />
+                            <div className="bg-slate-800/50 p-3 rounded-xl flex items-center space-x-3">
+                                <MapPin className="text-textMuted w-5 h-5 flex-shrink-0" />
                                 <div>
-                                    <p className="text-xs text-textMuted">Estimated Wait</p>
+                                    <p className="text-xs text-textMuted leading-tight">Total Capacity</p>
+                                    <p className="text-lg font-bold text-text">{station.capacity || 1} Ports</p>
+                                </div>
+                            </div>
+
+                            <div className="bg-slate-800/50 p-3 rounded-xl flex items-center space-x-3">
+                                <Car className="text-textMuted w-5 h-5 flex-shrink-0" />
+                                <div>
+                                    <p className="text-xs text-textMuted leading-tight">Queued (Today)</p>
+                                    <p className="text-lg font-bold text-text">{station.todayQueue || 0}</p>
+                                </div>
+                            </div>
+                            
+                            <div className="bg-slate-800/50 p-3 rounded-xl flex items-center space-x-3">
+                                <Clock className="text-textMuted w-5 h-5 flex-shrink-0" />
+                                <div>
+                                    <p className="text-xs text-textMuted leading-tight">Estimated Wait</p>
                                     <p className="text-sm font-bold text-text">
                                         {station.nextAvailableSlot 
                                             ? `${Math.max(0, Math.round((new Date(station.nextAvailableSlot) - new Date()) / 60000))} mins` 
@@ -210,7 +224,7 @@ const UserStations = () => {
                             onClick={() => handleBookNow(station)}
                             className="mt-6 w-full py-3 bg-primary hover:bg-blue-600 text-white font-medium rounded-xl transition flex justify-center items-center space-x-2 shadow-lg shadow-primary/20"
                         >
-                            <Zap className="w-4 h-4" />
+                            <Zap className="w-4 h-4 flex-shrink-0" />
                             <span>Book Now</span>
                         </button>
                     </motion.div>

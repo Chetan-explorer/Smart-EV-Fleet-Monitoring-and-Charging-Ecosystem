@@ -46,11 +46,11 @@ const importData = async () => {
 
         // Vehicles
         const createdVehicles = await Vehicle.insertMany([
-            { vehicleId: 'EV001', vehicleNumber: 'KA-01-EV-1234', model: 'Tesla Model 3', batteryCapacity: 85, status: 'active', location: { lat: 12.9716, lng: 77.5946 } },
-            { vehicleId: 'EV002', vehicleNumber: 'KA-01-EV-5678', model: 'Nissan Leaf', batteryCapacity: 45, status: 'charging', location: { lat: 12.9352, lng: 77.6245 } },
-            { vehicleId: 'EV003', vehicleNumber: 'KA-01-EV-9101', model: 'Hyundai Kona', batteryCapacity: 92, status: 'idle', location: { lat: 12.9698, lng: 77.7500 } },
-            { vehicleId: 'EV004', vehicleNumber: 'KA-01-EV-1121', model: 'Tata Nexon EV', batteryCapacity: 30, status: 'active', location: { lat: 13.0827, lng: 80.2707 } },
-            { vehicleId: 'EV005', vehicleNumber: 'KA-01-EV-3141', model: 'MG ZS EV', batteryCapacity: 15, status: 'charging', location: { lat: 12.9352, lng: 77.6245 } }
+            { vehicleId: 'EV001', vehicleNumber: 'KA-01-EV-1234', model: 'Tesla Model 3', batteryCapacity: 85, status: 'active' },
+            { vehicleId: 'EV002', vehicleNumber: 'KA-01-EV-5678', model: 'Nissan Leaf', batteryCapacity: 45, status: 'charging' },
+            { vehicleId: 'EV003', vehicleNumber: 'KA-01-EV-9101', model: 'Hyundai Kona', batteryCapacity: 92, status: 'idle' },
+            { vehicleId: 'EV004', vehicleNumber: 'KA-01-EV-1121', model: 'Tata Nexon EV', batteryCapacity: 30, status: 'active' },
+            { vehicleId: 'EV005', vehicleNumber: 'KA-01-EV-3141', model: 'MG ZS EV', batteryCapacity: 15, status: 'charging' }
         ]);
 
         // Charging Stations

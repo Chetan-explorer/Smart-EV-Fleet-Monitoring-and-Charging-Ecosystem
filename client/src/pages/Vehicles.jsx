@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { BatteryMedium, MapPin, Activity, X } from 'lucide-react';
+import { BatteryMedium, Activity, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,7 +20,7 @@ const Vehicles = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState('add'); // 'add', 'edit', 'view'
     const [currentVehicle, setCurrentVehicle] = useState({
-        vehicleId: '', vehicleNumber: '', model: '', batteryCapacity: 100, status: 'idle', location: { lat: 12.9716, lng: 77.5946 }
+        vehicleId: '', vehicleNumber: '', model: '', batteryCapacity: 100, status: 'idle'
     });
 
     const fetchVehicles = async () => {
@@ -69,7 +69,7 @@ const Vehicles = () => {
         if (vehicle) {
             setCurrentVehicle({ ...vehicle });
         } else {
-            setCurrentVehicle({ vehicleId: `EV00${vehicles.length + 1}`, vehicleNumber: '', model: '', batteryCapacity: 100, status: 'idle', location: { lat: 12.9716, lng: 77.5946 } });
+            setCurrentVehicle({ vehicleId: `EV00${vehicles.length + 1}`, vehicleNumber: '', model: '', batteryCapacity: 100, status: 'idle' });
         }
         setIsModalOpen(true);
     };
@@ -98,16 +98,7 @@ const Vehicles = () => {
                     <h1 className="text-2xl font-bold text-text">Fleet Vehicles</h1>
                     <p className="text-textMuted text-sm">Manage and monitor all EVs</p>
                 </div>
-                {user?.role === 'Admin' && (
-                    <motion.button 
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => openModal('add')}
-                        className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium shadow-lg shadow-primary/30 hover:bg-blue-600 transition"
-                    >
-                        + Add Vehicle
-                    </motion.button>
-                )}
+                {/* Add Vehicle button removed - Fleet EVs are dynamically pulled from registered User accounts */}
             </div>
 
             <div className="bg-surface rounded-2xl border border-slate-700 overflow-hidden shadow-xl">
@@ -115,11 +106,10 @@ const Vehicles = () => {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-slate-800/80 border-b border-slate-700 text-textMuted text-sm">
-                                <th className="p-4 font-medium">Vehicle ID</th>
+                                <th className="p-4 font-medium">Owner / Registered EV</th>
                                 <th className="p-4 font-medium">Model</th>
                                 <th className="p-4 font-medium">Battery</th>
                                 <th className="p-4 font-medium">Status</th>
-                                <th className="p-4 font-medium">Location</th>
                                 <th className="p-4 font-medium text-right">Actions</th>
                             </tr>
                         </thead>
@@ -150,12 +140,6 @@ const Vehicles = () => {
                                                 <Activity className="w-3 h-3" />
                                                 <span>{v.status}</span>
                                             </span>
-                                        </td>
-                                        <td className="p-4">
-                                            <div className="flex items-center space-x-2 text-textMuted">
-                                                <MapPin className="w-4 h-4" />
-                                                <span className="text-sm">lat: {v.location?.lat.toFixed(2)}, lng: {v.location?.lng.toFixed(2)}</span>
-                                            </div>
                                         </td>
                                         <td className="p-4 text-right space-x-3">
                                             {user?.role === 'Admin' && (
@@ -202,8 +186,9 @@ const Vehicles = () => {
                                 
                                 <div className="space-y-6">
                                     <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700/50">
-                                        <p className="text-sm text-textMuted mb-1">Vehicle ID</p>
+                                        <p className="text-sm text-textMuted mb-1">Owner</p>
                                         <p className="text-2xl font-black text-white">{currentVehicle.vehicleId}</p>
+                                        <p className="text-sm font-medium text-slate-400 mt-1">{currentVehicle.email}</p>
                                         <p className="text-sm font-medium text-primary mt-1">{currentVehicle.vehicleNumber}</p>
                                     </div>
                                     
@@ -227,17 +212,6 @@ const Vehicles = () => {
                                         <p className="text-textMuted mb-1 font-medium">Model Data</p>
                                         <p className="text-white font-medium">{currentVehicle.model}</p>
                                     </div>
-
-                                    <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 text-sm">
-                                        <div className="flex items-center space-x-2 mb-2">
-                                            <MapPin className="w-4 h-4 text-primary" />
-                                            <span className="font-medium text-white">Current Location</span>
-                                        </div>
-                                        <p className="text-textMuted ml-6">
-                                            Lat: {currentVehicle.location?.lat.toFixed(4)} <br/>
-                                            Lng: {currentVehicle.location?.lng.toFixed(4)}
-                                        </p>
-                                    </div>
                                 </div>
                             </div>
                         </motion.div>
@@ -257,8 +231,8 @@ const Vehicles = () => {
                             
                             <form onSubmit={handleSaveVehicle} className="space-y-4">
                                 <div>
-                                    <label className="text-xs text-textMuted font-bold">Vehicle ID (e.g. EV001)</label>
-                                    <input required type="text" value={currentVehicle.vehicleId} onChange={e => setCurrentVehicle({...currentVehicle, vehicleId: e.target.value})} className="w-full mt-1 p-2 bg-slate-800/50 border border-slate-700 rounded-lg text-text focus:border-primary disabled:opacity-50" />
+                                    <label className="text-xs text-textMuted font-bold">Owner Name</label>
+                                    <input required type="text" value={currentVehicle.vehicleId} onChange={e => setCurrentVehicle({...currentVehicle, vehicleId: e.target.value})} className="w-full mt-1 p-2 bg-slate-800/50 border border-slate-700 rounded-lg text-text focus:border-primary disabled:opacity-50" disabled />
                                 </div>
                                 <div>
                                     <label className="text-xs text-textMuted font-bold">Vehicle Number Plate</label>
