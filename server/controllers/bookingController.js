@@ -55,6 +55,11 @@ const createBooking = async (req, res) => {
 // @access  Private (User)
 const getUserBookings = async (req, res) => {
     try {
+        await Booking.updateMany(
+            { status: 'active', endTime: { $lt: new Date() } },
+            { $set: { status: 'completed' } }
+        );
+
         const bookings = await Booking.find({ 
             userId: req.user._id,
             status: 'active'
@@ -71,6 +76,11 @@ const getUserBookings = async (req, res) => {
 // @access  Private (User)
 const getBookingHistory = async (req, res) => {
     try {
+        await Booking.updateMany(
+            { status: 'active', endTime: { $lt: new Date() } },
+            { $set: { status: 'completed' } }
+        );
+
         const bookings = await Booking.find({
             userId: req.user._id,
             status: { $in: ['completed', 'cancelled'] }

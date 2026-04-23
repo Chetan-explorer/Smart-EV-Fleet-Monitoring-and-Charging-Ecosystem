@@ -106,8 +106,35 @@ const getUserProfile = async (req, res) => {
 // @access  Private (Admin)
 const getAllUsers = async (req, res) => {
     try {
-        const users = await User.find({}).select('-password');
-        res.json(users);
+        const users = await User.find({}).select('-password').lean();
+        const Booking = require('../models/Booking');
+        const allBookings = await Booking.find({}).lean();
+
+        const enhancedUsers = users.map(user => {
+            const userBookings = allBookings.filter(b => b.userId.toString() === user._id.toString());
+            const cancelled = userBookings.filter(b => b.status === 'cancelled').length;
+            const completed = userBookings.filter(b => b.status === 'completed').length;
+            const active = userBookings.filter(b => b.status === 'active').length;
+            
+            let lastBookedDate = null;
+            if (userBookings.length > 0) {
+                const latestBooking = [...userBookings].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+                lastBookedDate = latestBooking.createdAt;
+            }
+
+            return {
+                ...user,
+                stats: {
+                    totalBookings: userBookings.length,
+                    active,
+                    completed,
+                    cancelled,
+                    lastBookedDate
+                }
+            };
+        });
+
+        res.json(enhancedUsers);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

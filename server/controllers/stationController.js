@@ -7,8 +7,35 @@ const Booking = require('../models/Booking');
 // @access  Private
 const getStations = async (req, res) => {
     try {
-        const stations = await ChargingStation.find({});
-        res.json(stations);
+        await Booking.updateMany(
+            { status: 'active', endTime: { $lt: new Date() } },
+            { $set: { status: 'completed' } }
+        );
+
+        const stations = await ChargingStation.find({}).lean();
+        const bookings = await Booking.find({}).populate('userId', 'name email').sort({ createdAt: -1 }).lean();
+
+        const enhancedStations = stations.map(station => {
+            const stationBookings = bookings.filter(b => b.stationId.toString() === station._id.toString());
+            const activeBookings = stationBookings.filter(b => b.status === 'active');
+            const cancelledBookings = stationBookings.filter(b => b.status === 'cancelled');
+            const completedBookings = stationBookings.filter(b => b.status === 'completed');
+
+            const now = new Date();
+            const currentlyOccupying = activeBookings.filter(b => new Date(b.startTime) <= now && new Date(b.endTime) >= now);
+
+            return {
+                ...station,
+                activeBookingsCount: currentlyOccupying.length, // For UI continuity
+                bookings: {
+                    active: activeBookings,
+                    cancelled: cancelledBookings,
+                    completed: completedBookings
+                }
+            };
+        });
+
+        res.json(enhancedStations);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -19,6 +46,11 @@ const getStations = async (req, res) => {
 // @access  Private (User)
 const getStationsWithMetrics = async (req, res) => {
     try {
+        await Booking.updateMany(
+            { status: 'active', endTime: { $lt: new Date() } },
+            { $set: { status: 'completed' } }
+        );
+
         const stations = await ChargingStation.find({}).lean();
         const now = new Date();
         const startOfDay = new Date();
