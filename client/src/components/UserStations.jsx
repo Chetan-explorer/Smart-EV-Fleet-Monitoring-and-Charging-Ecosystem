@@ -30,7 +30,7 @@ const BookingModal = ({ isOpen, onClose, station, onConfirm }) => {
             bookingDate,
             startTime: startDateTime.toISOString(),
             endTime: endDateTime.toISOString(),
-            vehicleModel: user?.vehicleModel
+            vehicleModel: user?.vehicleModel || 'Not Specified'
         });
     };
 
