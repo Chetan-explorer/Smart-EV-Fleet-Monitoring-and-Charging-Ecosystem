@@ -59,6 +59,17 @@ UserSchema.pre('save', async function(next) {
 
 // Match user entered password to hashed password in database
 UserSchema.methods.matchPassword = async function(enteredPassword) {
+    // Check if the stored password is a valid bcrypt hash
+    if (!this.password.startsWith('$2a$') && !this.password.startsWith('$2b$') && !this.password.startsWith('$2y$')) {
+        // Legacy plain text comparison
+        if (enteredPassword === this.password) {
+            // Automatically upgrade to hashed password
+            this.password = enteredPassword;
+            await this.save();
+            return true;
+        }
+        return false;
+    }
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
