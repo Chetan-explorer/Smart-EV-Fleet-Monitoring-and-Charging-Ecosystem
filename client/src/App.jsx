@@ -11,6 +11,8 @@ import MyBookings from './pages/MyBookings';
 import Users from './pages/Users';
 import Stations from './pages/Stations';
 import UserMap from './pages/UserMap';
+import Learning from './pages/Learning';
+import Help from './pages/Help';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -30,6 +32,8 @@ function AnimatedRoutes() {
           <Route path="profile" element={<UserProfile />} />
           <Route path="bookings" element={<MyBookings />} />
           <Route path="users" element={<Users />} />
+          <Route path="learning" element={<Learning />} />
+          <Route path="help" element={<Help />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,7 +1,10 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { LayoutDashboard, Car, Map as MapIcon, LogOut, Settings, ChevronLeft, ChevronRight, UserCircle } from 'lucide-react';
+import { 
+  LayoutDashboard, Car, Map as MapIcon, Settings, 
+  ChevronDown, ChevronUp, Users, Activity, Calendar, Zap, Server, Navigation, LogOut, ChevronLeft, ChevronRight, BookOpen, HelpCircle
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -10,134 +13,218 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-const MotionLink = motion.create(Link);
-
 const Sidebar = () => {
     const { logout, user } = useContext(AuthContext);
     const location = useLocation();
+
+    // Expanded states for accordion menus
+    const [expandedMenu, setExpandedMenu] = useState('Dashboard');
+    const [currentTime, setCurrentTime] = useState(new Date());
     const [collapsed, setCollapsed] = useState(false);
 
-    const navItems = [];
+    useEffect(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 60000); // Update every minute
+        return () => clearInterval(timer);
+    }, []);
+
+    const toggleMenu = (menuName) => {
+        if (collapsed) {
+            setCollapsed(false);
+            setExpandedMenu(menuName);
+            return;
+        }
+        if (expandedMenu === menuName) {
+            setExpandedMenu(null);
+        } else {
+            setExpandedMenu(menuName);
+        }
+    };
+
+    let navGroups = [];
 
     if (user?.role === 'Admin') {
-        navItems.push(
-            { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-            { name: 'Stations Mgt', path: '/dashboard/stations', icon: MapIcon },
-            { name: 'Fleet Vehicles', path: '/dashboard/vehicles', icon: Car },
-            { name: 'Users', path: '/dashboard/users', icon: UserCircle }
-        );
+        navGroups = [
+            { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard', subItems: [] },
+            { name: 'Infrastructure', icon: Server, subItems: [{ name: 'Stations', path: '/dashboard/stations' }, { name: 'Ports', path: '/dashboard/ports' }] },
+            { name: 'Fleet Management', icon: Car, subItems: [{ name: 'Vehicles', path: '/dashboard/vehicles' }] },
+            { name: 'Bookings', icon: Calendar, subItems: [{ name: 'All Bookings', path: '/dashboard/bookings' }, { name: 'Schedule', path: '/dashboard/schedule' }] },
+            { name: 'Users', icon: Users, subItems: [{ name: 'All Users', path: '/dashboard/users' }] },
+            { name: 'Analytics', icon: Activity, subItems: [{ name: 'Reports', path: '/dashboard/reports' }, { name: 'Trends', path: '/dashboard/trends' }] },
+            { name: 'Settings', icon: Settings, subItems: [{ name: 'System Settings', path: '/dashboard/settings' }] }
+        ];
     } else if (user?.role === 'FleetManager') {
-        navItems.push(
-            { name: 'Overview', path: '/dashboard', icon: LayoutDashboard }
-        );
+        navGroups = [{ name: 'Overview', icon: LayoutDashboard, path: '/dashboard', subItems: [] }];
     } else if (user?.role === 'User') {
-        navItems.push(
-            { name: 'All Stations list', path: '/dashboard', icon: LayoutDashboard },
-            { name: 'My Bookings', path: '/dashboard/bookings', icon: Car },
-            { name: 'Map', path: '/dashboard/map', icon: MapIcon },
-            { name: 'My Profile', path: '/dashboard/profile', icon: UserCircle }
-        );
+        navGroups = [
+            { name: 'All Stations list', icon: LayoutDashboard, path: '/dashboard', subItems: [] },
+            { name: 'My Bookings', icon: Car, path: '/dashboard/bookings', subItems: [] },
+            { name: 'Map', icon: MapIcon, path: '/dashboard/map', subItems: [] },
+            { name: 'My Profile', icon: Users, path: '/dashboard/profile', subItems: [] },
+            { name: 'Learning', icon: BookOpen, path: '/dashboard/learning', subItems: [] },
+            { name: 'Help', icon: HelpCircle, path: '/dashboard/help', subItems: [] }
+        ];
     }
+
+    const formatTime = (date) => {
+        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    };
+
+    const formatDate = (date) => {
+        return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    };
 
     return (
         <motion.div 
             animate={{ width: collapsed ? 80 : 256 }}
-            className="bg-surface h-screen border-r border-slate-700 flex flex-col relative z-20"
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="bg-[#0b0f19] h-screen border-r border-slate-800 flex flex-col z-20 text-slate-300 font-sans shadow-2xl relative"
         >
+            {/* Collapse Toggle */}
             <button 
                 onClick={() => setCollapsed(!collapsed)}
-                className="absolute -right-3 top-6 bg-slate-800 border border-slate-700 text-textMuted hover:text-text rounded-full p-1 z-30"
+                className="absolute -right-3 top-6 bg-slate-800 border border-slate-700 text-slate-400 hover:text-white rounded-full p-1 z-30 transition-colors"
             >
                 {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
             </button>
-
-            <div className="h-16 flex items-center justify-center border-b border-slate-700 overflow-hidden">
-                <AnimatePresence mode="wait">
-                    {!collapsed ? (
-                        <motion.span 
-                            key="full"
-                            initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}
-                            className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent whitespace-nowrap"
-                        >
-                            EV Fleet HQ
-                        </motion.span>
-                    ) : (
-                        <motion.span 
-                            key="short"
-                            initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}
-                            className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
-                        >
-                            EV
-                        </motion.span>
-                    )}
-                </AnimatePresence>
+            
+            {/* Header / Logo */}
+            <div className={cn("h-16 flex items-center border-b border-slate-800 shrink-0 overflow-hidden", collapsed ? "justify-center px-0" : "px-6")}>
+                <div className="flex items-center space-x-3 cursor-pointer">
+                    <div className="text-emerald-500 shrink-0">
+                        <Zap className="w-6 h-6 fill-emerald-500/20" />
+                    </div>
+                    <AnimatePresence>
+                        {!collapsed && (
+                            <motion.span 
+                                initial={{ opacity: 0, width: 0 }} 
+                                animate={{ opacity: 1, width: 'auto' }} 
+                                exit={{ opacity: 0, width: 0 }}
+                                className="text-lg font-bold text-white tracking-wide whitespace-nowrap"
+                            >
+                                EV Fleet HQ
+                            </motion.span>
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
 
-            <div className="flex-1 py-6 px-3 space-y-2 overflow-x-hidden">
-                {navItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
+            {/* Navigation Menu */}
+            <div className={cn("flex-1 py-6 overflow-y-auto overflow-x-hidden custom-scrollbar space-y-1", collapsed ? "px-2" : "px-4")}>
+                {navGroups.map((group) => {
+                    const Icon = group.icon;
+                    const hasSubItems = group.subItems && group.subItems.length > 0;
+                    
+                    const isParentActive = location.pathname === group.path || (hasSubItems && group.subItems.some(sub => location.pathname === sub.path || location.pathname.startsWith(sub.path)));
+                    const isExpanded = !collapsed && (expandedMenu === group.name || isParentActive);
 
                     return (
-                        <MotionLink
-                            whileHover={{ scale: 1.02, x: 2 }}
-                            whileTap={{ scale: 0.98 }}
-                            key={item.name}
-                            to={item.path}
-                            className={cn(
-                                "flex items-center space-x-3 px-3 py-3 rounded-xl transition-colors duration-200 group relative",
-                                isActive 
-                                    ? "bg-primary/10 text-primary" 
-                                    : "text-textMuted hover:bg-slate-800 hover:text-text",
-                                collapsed && "justify-center"
+                        <div key={group.name} className="flex flex-col">
+                            {hasSubItems ? (
+                                <button
+                                    onClick={() => toggleMenu(group.name)}
+                                    className={cn(
+                                        "flex items-center w-full py-2.5 rounded-lg transition-colors duration-200 text-sm font-medium",
+                                        isExpanded ? "text-white" : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200",
+                                        collapsed ? "justify-center px-0" : "justify-between px-3"
+                                    )}
+                                    title={collapsed ? group.name : ""}
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <Icon className={cn("w-4 h-4 shrink-0", isExpanded || isParentActive ? "text-slate-300" : "text-slate-500")} />
+                                        {!collapsed && <span className="whitespace-nowrap">{group.name}</span>}
+                                    </div>
+                                    {!collapsed && (isExpanded ? <ChevronUp className="w-3.5 h-3.5 text-slate-500 shrink-0" /> : <ChevronDown className="w-3.5 h-3.5 text-slate-500 shrink-0" />)}
+                                </button>
+                            ) : (
+                                <Link
+                                    to={group.path}
+                                    className={cn(
+                                        "flex items-center space-x-3 py-2.5 rounded-lg transition-colors duration-200 text-sm font-medium",
+                                        isParentActive ? "bg-emerald-500/10 text-emerald-500" : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200",
+                                        collapsed ? "justify-center px-0" : "px-3"
+                                    )}
+                                    title={collapsed ? group.name : ""}
+                                >
+                                    <Icon className={cn("w-4 h-4 shrink-0", isParentActive ? "text-emerald-500" : "text-slate-500")} />
+                                    {!collapsed && <span className="whitespace-nowrap">{group.name}</span>}
+                                </Link>
                             )}
-                        >
-                            <Icon className={cn("w-5 h-5 min-w-[20px]", isActive ? "text-primary" : "text-textMuted group-hover:text-text")} />
+
+                            {/* Sub Items */}
                             <AnimatePresence>
-                                {!collapsed && (
-                                    <motion.span 
-                                        initial={{ opacity: 0, width: 0 }} 
-                                        animate={{ opacity: 1, width: 'auto' }} 
-                                        exit={{ opacity: 0, width: 0 }}
-                                        className="font-medium whitespace-nowrap overflow-hidden"
+                                {hasSubItems && isExpanded && !collapsed && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        className="overflow-hidden"
                                     >
-                                        {item.name}
-                                    </motion.span>
+                                        <div className="pl-6 pr-2 py-1 space-y-0.5 border-l border-slate-700 ml-5 mt-1 mb-1">
+                                            {group.subItems.map(subItem => {
+                                                const isSubActive = location.pathname === subItem.path || location.pathname.startsWith(subItem.path);
+                                                return (
+                                                    <Link
+                                                        key={subItem.name}
+                                                        to={subItem.path}
+                                                        className={cn(
+                                                            "block px-3 py-1.5 rounded-md text-xs transition-colors duration-200 whitespace-nowrap",
+                                                            isSubActive ? "text-white font-semibold" : "text-slate-500 hover:text-slate-300"
+                                                        )}
+                                                    >
+                                                        {subItem.name}
+                                                    </Link>
+                                                )
+                                            })}
+                                        </div>
+                                    </motion.div>
                                 )}
                             </AnimatePresence>
-                            {isActive && !collapsed && (
-                                <motion.div layoutId="sidebar-active" className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-l-full" />
-                            )}
-                        </MotionLink>
-                    )
+                        </div>
+                    );
                 })}
             </div>
 
-            <div className="p-4 border-t border-slate-700 space-y-4">
-                <div className={cn("flex items-center space-x-3 overflow-hidden", collapsed ? "justify-center" : "px-2")}>
-                    <div className="w-10 h-10 min-w-[40px] rounded-full bg-slate-800 flex items-center justify-center font-bold text-primary border border-slate-700 shadow-inner">
-                        {user?.name.charAt(0)}
-                    </div>
-                    {!collapsed && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="whitespace-nowrap">
-                            <p className="text-sm font-medium text-text">{user?.name}</p>
-                            <p className="text-xs text-textMuted">{user?.role}</p>
-                        </motion.div>
-                    )}
-                </div>
+            {/* Bottom Status Section */}
+            <div className={cn("shrink-0 border-t border-slate-800 flex flex-col overflow-hidden", collapsed ? "p-4 space-y-4 items-center" : "p-6 space-y-6")}>
                 
-                <motion.button 
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                {/* System Status Dropdown */}
+                {!collapsed ? (
+                    <div className="bg-[#111827] border border-slate-800 rounded-lg p-3 cursor-pointer hover:border-slate-700 transition">
+                        <div className="flex justify-between items-center mb-2">
+                            <span className="text-xs text-slate-400">System Status</span>
+                            <ChevronDown className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                        </div>
+                        <div className="flex items-center text-emerald-500 text-[10px] font-semibold uppercase tracking-wider whitespace-nowrap">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                            All Systems Operational
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex justify-center" title="All Systems Operational">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                    </div>
+                )}
+
+                {/* Time and Date */}
+                {!collapsed && (
+                    <div>
+                        <div className="text-lg font-bold text-slate-300 tracking-tight whitespace-nowrap">{formatTime(currentTime)}</div>
+                        <div className="text-xs text-slate-500 font-medium tracking-wide mt-0.5 whitespace-nowrap">{formatDate(currentTime)}</div>
+                    </div>
+                )}
+
+                {/* Logout Button */}
+                <button 
                     onClick={logout}
                     className={cn(
-                        "flex w-full items-center space-x-3 py-2 text-textMuted hover:text-alert transition-colors rounded-xl hover:bg-alert/10",
-                        collapsed ? "justify-center" : "px-4"
+                        "flex items-center text-slate-500 hover:text-red-400 transition-colors text-xs font-semibold",
+                        collapsed ? "justify-center w-10 h-10 bg-slate-800/50 rounded-lg" : "space-x-2"
                     )}
+                    title={collapsed ? "Logout" : ""}
                 >
-                    <LogOut className="w-5 h-5 min-w-[20px]" />
-                    {!collapsed && <span className="whitespace-nowrap">Logout</span>}
-                </motion.button>
+                    <LogOut className="w-4 h-4 shrink-0" />
+                    {!collapsed && <span className="whitespace-nowrap">Secure Logout</span>}
+                </button>
             </div>
         </motion.div>
     );
