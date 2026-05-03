@@ -108,8 +108,8 @@ const MapView = () => {
             <div className="flex-1 bg-surface rounded-2xl border border-slate-700 overflow-hidden relative">
                 <MapContainer center={center} zoom={12} scrollWheelZoom={true} className="h-full w-full">
                     <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+                        url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
                     />
                     
                     {/* Render Stations */}
@@ -151,7 +151,7 @@ const MapView = () => {
 
                     {/* Draw Routes manually and automatically */}
                     {selectedRoutes.map((route, idx) => (
-                        <Polyline key={idx} positions={route} color="#3b82f6" weight={4} dashArray="10, 10" />
+                        <Polyline key={idx} positions={route} color="#ef4444" weight={3} dashArray="6, 6" />
                     ))}
 
                 </MapContainer>
