@@ -1,18 +1,41 @@
-# EV Fleet Monitoring & Charging Dashboard
+# ⚡ Smart EV Fleet Monitoring and Charging Ecosystem
 
-A production-grade full-stack MERN application for monitoring and tracking EV fleets.
+A modern, production-grade SaaS platform designed for comprehensive EV fleet management, charging station monitoring, and automated user booking systems. Built with the MERN stack (MongoDB, Express, React, Node.js) and enriched with real-time geospatial intelligence and AI-driven insights.
 
-## Features
-- **Dashboard**: High-level real-time overview of your fleet (Total vehicles, charging vs idle, battery statistics).
-- **Vehicles Management**: Comprehensive table of fleet vehicles with specific status and real-time battery info.
-- **Geospatial Map**: Integrated `react-leaflet` to display routing from EV vehicles to charging stations.
-- **Authentication**: JWT & Bcrypt based Role Based Access Control (RBAC).
+## 🌟 Key Features
 
-## Setup Instructions
+- **Role-Based Access Control (RBAC):** Secure access tiers for Administrators, Fleet Managers, and standard Users, ensuring data integrity and restricted capabilities based on verified domains.
+- **EV Charging Booking System:** Seamless user reservation flow preventing scheduling overlaps, capturing detailed vehicle specifications, and optimizing charging station utilization.
+- **Admin Command Center:** A high-performance analytics dashboard providing real-time aggregated metrics on global station capacity, booking pressure, and operational alerts.
+- **Interactive Geospatial Mapping:** Live `react-leaflet` integration leveraging custom Mapbox layers for premium visual tracking of fleet locations and station availability.
+- **Gemini AI Assistant:** Integrated conversational interface powered by Google's Generative AI (`@google/generative-ai`), allowing admins to query system data, operational metrics, and contextual insights instantly.
+- **Premium Modern UI/UX:** Built with Tailwind CSS and Framer Motion, offering a sleek, dark-mode SaaS aesthetic, micro-interactions, and fluid responsive layouts.
+
+## 🛠️ Technology Stack
+
+### Frontend (Client)
+
+- **Core:** React 19, Vite, React Router DOM
+- **Styling & UI:** Tailwind CSS, Framer Motion, Lucide React, `clsx`, `tailwind-merge`
+- **Data Visualization:** Recharts (KPIs and Analytics)
+- **Mapping:** React-Leaflet, Leaflet, Mapbox
+- **Data Fetching:** Axios
+
+### Backend (Server)
+
+- **Core:** Node.js, Express.js
+- **Database:** MongoDB, Mongoose
+- **Authentication:** JSON Web Tokens (JWT), Bcrypt.js
+- **AI Integration:** `@google/generative-ai`
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js installed
-- MongoDB installed and running locally, or access to a MongoDB Atlas cluster.
+
+- Node.js (v18+ recommended)
+- MongoDB (Local instance or MongoDB Atlas cluster)
+- Mapbox API Key (for premium map tiles)
+- Google Gemini API Key (Required for AI Chat features)
 
 ### 1. Backend Setup
 
@@ -21,21 +44,24 @@ cd server
 npm install
 ```
 
-Configure environment variables in `server/.env` (These are set by default to use a local mongodb instance):
+Create a `.env` file in the `server` directory and configure the following variables:
 
-```
+```env
 PORT=5000
-MONGO_URI=mongodb://127.0.0.1:27017/ev-fleet
-JWT_SECRET=supersecretjwtkeyforfleet
+MONGO_URI=your_mongo_uri
+JWT_SECRET=your_super_secret_jwt_key
 NODE_ENV=development
+GEMINI_API_KEY=your_google_gemini_api_key
 ```
 
 **Seed Mock Data into DB:**
+
 ```bash
 npm run data:import
 ```
 
 **Run Server:**
+
 ```bash
 npm run dev
 ```
@@ -49,17 +75,22 @@ cd client
 npm install
 ```
 
+_(Optional)_ Configure frontend environment variables if needed (e.g., in `client/.env`):
+
+```env
+VITE_MAPBOX_API_KEY=your_mapbox_api_key
+```
+
 Start the Vite development server:
+
 ```bash
 npm run dev
 ```
-The application will launch with hot module replacement pointing to the API.
 
-## Default Admin Credentials
-When you run the seed data script `npm run data:import`, it provisions an admin.
-- **Email:** `admin@fleet.com`
-- **Password:** `password123`
+The application will launch automatically at `http://localhost:5173`.
 
-## Architecture
-- **Mongoose/Express Backend:** Organized in controllers, models, routes and utility architecture to ensure scalability.
-- **React Frontend:** Built using Vite, utilizing Context APIs for global Auth. Styled intricately with standard Tailwind to offer a dark SaaS aesthetic. Recharts handles robust visualizations and leaf-let manages the complex geographical charting algorithms.
+## 📂 Architecture Highlights
+
+- **Modular API Structure:** The Express backend is structured into distinct routes (`auth`, `vehicles`, `stations`, `analytics`, `booking`, `chat`) using a robust Controller-Service pattern.
+- **Optimistic UI Updates:** The React client utilizes sophisticated Context APIs and local state management to provide instant feedback during CRUD operations.
+- **Advanced Data Aggregation:** MongoDB aggregation pipelines are utilized extensively in the analytics routes to process large datasets before transmitting them to the client, ensuring optimal performance.
