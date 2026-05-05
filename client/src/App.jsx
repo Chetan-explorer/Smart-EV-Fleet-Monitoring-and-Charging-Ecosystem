@@ -13,6 +13,12 @@ import Stations from './pages/Stations';
 import UserMap from './pages/UserMap';
 import Learning from './pages/Learning';
 import Help from './pages/Help';
+import Ports from './pages/Ports';
+import Schedule from './pages/Schedule';
+import Reports from './pages/Reports';
+import Trends from './pages/Trends';
+import Settings from './pages/Settings';
+import AllBookings from './pages/AllBookings';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -34,6 +40,12 @@ function AnimatedRoutes() {
           <Route path="users" element={<Users />} />
           <Route path="learning" element={<Learning />} />
           <Route path="help" element={<Help />} />
+          <Route path="ports" element={<Ports />} />
+          <Route path="schedule" element={<Schedule />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="trends" element={<Trends />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="all-bookings" element={<AllBookings />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

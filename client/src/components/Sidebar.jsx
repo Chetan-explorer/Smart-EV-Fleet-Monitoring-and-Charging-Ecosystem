@@ -47,7 +47,7 @@ const Sidebar = () => {
             { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard', subItems: [] },
             { name: 'Infrastructure', icon: Server, subItems: [{ name: 'Stations', path: '/dashboard/stations' }, { name: 'Ports', path: '/dashboard/ports' }] },
             { name: 'Fleet Management', icon: Car, subItems: [{ name: 'Vehicles', path: '/dashboard/vehicles' }] },
-            { name: 'Bookings', icon: Calendar, subItems: [{ name: 'All Bookings', path: '/dashboard/bookings' }, { name: 'Schedule', path: '/dashboard/schedule' }] },
+            { name: 'Bookings', icon: Calendar, subItems: [{ name: 'All Bookings', path: '/dashboard/all-bookings' }, { name: 'Schedule', path: '/dashboard/schedule' }] },
             { name: 'Users', icon: Users, subItems: [{ name: 'All Users', path: '/dashboard/users' }] },
             { name: 'Analytics', icon: Activity, subItems: [{ name: 'Reports', path: '/dashboard/reports' }, { name: 'Trends', path: '/dashboard/trends' }] },
             { name: 'Settings', icon: Settings, subItems: [{ name: 'System Settings', path: '/dashboard/settings' }] }

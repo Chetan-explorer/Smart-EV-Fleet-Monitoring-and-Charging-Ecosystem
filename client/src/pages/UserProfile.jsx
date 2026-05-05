@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { User as UserIcon, Mail, Car, Zap, BatteryCharging, ShieldCheck } from 'lucide-react';
+import { User as UserIcon, Mail, Car, Zap, BatteryCharging, ShieldCheck, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const UserProfile = () => {
-    const { user } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
     // Provide a neat card animation variant
@@ -52,6 +52,14 @@ const UserProfile = () => {
                                 <p className="text-sm font-semibold text-text">{user?.email}</p>
                             </div>
                         </div>
+                        
+                        <button 
+                            onClick={logout}
+                            className="w-full mt-4 p-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-xl flex items-center justify-center space-x-2 transition-colors font-medium text-sm"
+                        >
+                            <LogOut className="w-4 h-4" />
+                            <span>Sign Out</span>
+                        </button>
                     </div>
                 </motion.div>
 

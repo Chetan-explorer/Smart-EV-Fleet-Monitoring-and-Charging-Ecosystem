@@ -368,7 +368,7 @@ const Dashboard = () => {
                         <div className="flex-1 w-full relative -ml-4 min-h-0">
                              <ResponsiveContainer width="100%" height="100%">
                                 <ScatterChart margin={{ top: 10, right: 10, bottom: 0, left: -10 }}>
-                                    <XAxis type="category" dataKey="day" name="Day" stroke="#cbd5e1" fontSize={9} tickLine={false} axisLine={false} />
+                                    <XAxis type="category" dataKey="day" name="Day" stroke="#cbd5e1" fontSize={9} tickLine={false} axisLine={false} allowDuplicatedCategory={false} />
                                     <YAxis type="category" dataKey="hour" name="Hour" stroke="#cbd5e1" fontSize={9} tickLine={false} axisLine={false} reversed />
                                     <ZAxis type="number" dataKey="value" range={[10, 200]} />
                                     <RechartsTooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', fontSize: '10px', color: '#cbd5e1' }} itemStyle={{ color: '#cbd5e1' }} labelStyle={{ color: '#cbd5e1' }} />

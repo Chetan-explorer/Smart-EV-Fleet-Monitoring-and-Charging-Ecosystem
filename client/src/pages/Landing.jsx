@@ -1,245 +1,309 @@
-import { Link, Navigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Zap, Activity, ShieldAlert, Cpu, ArrowUpRight, BatteryCharging, ZapOff, Car } from 'lucide-react';
-import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { 
+  Zap, Navigation, BarChart3, Car, ChevronRight, 
+  MapPin, Activity, ShieldAlert, Cpu, ArrowUpRight, Clock 
+} from 'lucide-react';
 
 const Landing = () => {
-  const { token, loading } = useContext(AuthContext);
-  const { scrollYProgress } = useScroll();
-  const yHero = useTransform(scrollYProgress, [0, 1], [0, 400]);
-  const opacityHero = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-
-  if (loading) return null;
-  if (token) return <Navigate to="/dashboard" replace />;
-
-  return (
-    <>
-      {/* Inject custom distinctive fonts: Anton for brutalist headers, Archivo for dense body text */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@100;400;900&display=swap');
-        
-        .font-brutal {
-          font-family: 'Anton', sans-serif;
-          text-transform: uppercase;
-        }
-        
-        .font-dense {
-          font-family: 'Archivo', sans-serif;
-        }
-
-        .neon-lime {
-          color: #D4FF00;
-        }
-
-        .bg-neon-lime {
-          background-color: #D4FF00;
-          color: #000;
-        }
-
-        .border-neon-lime {
-          border-color: #D4FF00;
-        }
-
-        .hover-neon-block:hover {
-          background-color: #D4FF00;
-          color: #000 !important;
-          transform: translate(-4px, -4px);
-          box-shadow: 8px 8px 0px 0px rgba(212, 255, 0, 0.4);
-        }
-
-        .grain-overlay {
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          pointer-events: none;
-          z-index: 9999;
-          opacity: 0.04;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-      `}</style>
-
-      <div className="min-h-screen bg-[#050505] text-[#E0E0E0] font-dense overflow-x-hidden relative selection:bg-[#D4FF00] selection:text-black">
-        <div className="grain-overlay"></div>
-
-        {/* Industrial Grid Background */}
-        <div className="fixed inset-0 z-0 pointer-events-none opacity-20" 
-             style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
-        </div>
-
-        {/* Navbar */}
-        <nav className="relative z-50 flex items-center justify-between p-6 md:p-10 mix-blend-difference">
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "circOut" }}
-            className="flex items-center space-x-3"
-          >
-            <div className="w-12 h-12 bg-white flex items-center justify-center rounded-none shadow-[4px_4px_0_0_#D4FF00]">
-              <Zap className="w-8 h-8 text-black" strokeWidth={3} />
-            </div>
-            <span className="font-brutal text-3xl tracking-wide text-white">SYSTEM.HQ</span>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: "circOut" }}
-            className="flex items-center space-x-6"
-          >
-            <Link to="/login" className="font-brutal text-xl text-white hover:neon-lime transition-colors hidden sm:block border-b-2 border-transparent hover:border-[#D4FF00]">
-              // AUTHENTICATE
-            </Link>
-            <Link to="/register" className="font-brutal text-lg md:text-xl bg-neon-lime px-6 md:px-8 py-3 hover-neon-block transition-all border-2 border-transparent">
-              INITIALIZE FLEET
-            </Link>
-          </motion.div>
-        </nav>
-
-        {/* FULL SCREEN HERO SECTION */}
-        <section className="relative z-10 min-h-[90vh] flex flex-col justify-center px-6 md:px-10">
-          <motion.div style={{ y: yHero, opacity: opacityHero }} className="w-full max-w-7xl mx-auto border-l-4 border-neon-lime pl-6 md:pl-12 py-10">
+    return (
+        <div className="min-h-screen bg-[#0a0f18] text-[#cbd5e1] font-['Inter'] overflow-x-hidden selection:bg-[#10b981] selection:text-white">
             
-            <motion.div
-              initial={{ width: 0 }} animate={{ width: "100px" }} transition={{ duration: 1, ease: "backOut" }}
-              className="h-1 bg-neon-lime mb-8"
-            />
+            {/* Background Grid Pattern */}
+            <div className="fixed inset-0 pointer-events-none opacity-[0.03]" 
+                 style={{ backgroundImage: 'linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
+            </div>
 
-            <motion.h1 
-              initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-brutal text-[14vw] md:text-[9vw] leading-[0.85] text-white m-0 p-0"
-            >
-              BRUTE <span className="neon-lime">FORCE</span><br/>
-              YOUR FLEET.
-            </motion.h1>
-
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.5 }}
-              className="mt-12 flex flex-col md:flex-row items-start md:items-end justify-between border-t border-[#333] pt-8"
-            >
-              <p className="text-xl md:text-3xl font-dense font-light text-[#999] max-w-2xl leading-snug">
-                Raw industrial telemetry. Absolute operational domain. Scale your Electric Vehicle infrastructure with zero compromises and militant precision.
-              </p>
-
-              <div className="mt-8 md:mt-0 flex space-x-4">
-                <Link to="/register" className="group flex items-center justify-center font-brutal text-2xl border-2 border-white text-white p-6 hover-neon-block transition-all bg-black">
-                  DEPLOY NOW <ArrowUpRight className="ml-2 w-8 h-8 group-hover:rotate-45 transition-transform" />
-                </Link>
-              </div>
-            </motion.div>
-
-          </motion.div>
-
-          {/* Marquee effect */}
-          <div className="absolute bottom-0 left-0 right-0 overflow-hidden border-y border-[#333] bg-[#0A0A0A] py-3 flex">
-            <motion.div 
-              animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, ease: "linear", duration: 15 }}
-              className="whitespace-nowrap flex space-x-8 font-brutal text-2xl text-[#666]"
-            >
-               <span>// KINETIC ENERGY RECOVERY</span> <span>// TELEMETRY ACTIVE</span> <span>// GRID OPTIMIZED</span> <span>// ZERO EMISSION TACTICS</span>
-               <span>// KINETIC ENERGY RECOVERY</span> <span>// TELEMETRY ACTIVE</span> <span>// GRID OPTIMIZED</span> <span>// ZERO EMISSION TACTICS</span>
-               <span>// KINETIC ENERGY RECOVERY</span> <span>// TELEMETRY ACTIVE</span> <span>// GRID OPTIMIZED</span> <span>// ZERO EMISSION TACTICS</span>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ABSTRACT METRICS SECTION */}
-        <section className="relative z-10 py-32 px-6 md:px-10 bg-white text-black">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
-             <div>
-                <h2 className="font-brutal text-6xl md:text-8xl leading-none mb-8">
-                   NO GLOSS.<br/>
-                   JUST <span className="neon-lime" style={{textShadow: "2px 2px 0 #000"}} >DATA.</span>
-                </h2>
-                <p className="text-xl md:text-2xl font-bold mb-10 max-w-lg">
-                   Forget pretty dashboards. We provide raw, unadulterated telemetry for high-performance fleet managers who demand immediate operational clarity.
-                </p>
-                <div className="grid grid-cols-2 gap-6 font-brutal text-xl">
-                   <div className="border-l-4 border-black pl-4">
-                      <div className="text-5xl md:text-6xl mb-2 text-black leading-none">99.9%</div>
-                      <div className="text-gray-500 max-w-[100px]">UPTIME PROTOCOL</div>
-                   </div>
-                   <div className="border-l-4 border-black pl-4">
-                      <div className="text-5xl md:text-6xl mb-2 text-black leading-none">&lt;10ms</div>
-                      <div className="text-gray-500 max-w-[100px]">SYSTEM LATENCY</div>
-                   </div>
+            {/* Navbar */}
+            <nav className="relative z-50 border-b border-[#111827]/80 bg-[#0a0f18]/80 backdrop-blur-md">
+                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-[#10b981]/10 rounded-xl flex items-center justify-center border border-[#10b981]/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                            <Zap className="w-5 h-5 text-[#10b981]" />
+                        </div>
+                        <span className="text-[#ffffff] font-['Space_Grotesk'] font-bold text-xl tracking-tight">NEXUS<span className="text-[#10b981]">.EV</span></span>
+                    </div>
+                    <div className="flex items-center space-x-6">
+                        <Link to="/login" className="text-sm font-medium hover:text-[#ffffff] transition-colors">Sign In</Link>
+                        <Link to="/register" state={{ defaultRole: 'User' }} className="px-5 py-2.5 bg-[#10b981] hover:bg-[#059669] text-white text-sm font-bold rounded-lg transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)]">
+                            Access Portal
+                        </Link>
+                    </div>
                 </div>
-             </div>
-             
-             {/* Brutalist Graphics Component */}
-             <div className="relative border-4 border-black p-4 md:p-8 bg-[#F0F0F0] shadow-[16px_16px_0_0_#000]">
-                <div className="absolute top-4 right-4 bg-black text-neon-lime font-brutal px-4 py-1 text-xl z-20">
-                   STATUS: OPTIMAL
-                </div>
-                <div className="border border-black bg-white p-6 mt-12 block relative overflow-hidden">
-                   <Cpu className="w-16 h-16 text-black mb-6 relative z-10" />
-                   <h3 className="font-brutal text-3xl mb-4 relative z-10">CORE NERVOUS SYSTEM</h3>
-                   
-                   <div className="h-6 border-2 border-black w-full mb-4 relative z-10 p-1">
-                      <motion.div initial={{ width: "0%" }} whileInView={{ width: "87%" }} transition={{ duration: 1.5, delay: 0.2 }} className="h-full bg-neon-lime relative">
-                         <div className="absolute inset-0 bg-black opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, #000 10px, #000 20px)' }}></div>
-                      </motion.div>
-                   </div>
+            </nav>
 
-                   <div className="flex justify-between font-bold font-mono text-sm uppercase relative z-10">
-                      <span>Load Capacity</span> <span className="bg-black text-neon-lime px-2 py-0.5">87%</span>
-                   </div>
-
-                   <div className="absolute -bottom-10 -right-10 text-9xl text-gray-100 font-brutal pointer-events-none opacity-50 z-0 select-none">
-                      SYS
-                   </div>
-                </div>
-             </div>
-          </div>
-        </section>
-
-        {/* FEATURES - GRID LISTING NO TRACKING */}
-        <section className="relative z-10 py-32 px-6 md:px-10 bg-[#0A0A0A]">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex items-center justify-between mb-16 border-b-2 border-[#333] pb-6">
-                    <h2 className="font-brutal text-5xl md:text-7xl text-white">CORE MECHANICS</h2>
-                    <ZapOff className="w-12 h-12 md:w-16 md:h-16 text-[#333]" />
-                </div>
+            {/* Hero Section */}
+            <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
+                {/* Neon Glow */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#10b981]/10 rounded-full blur-[120px] pointer-events-none"></div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {[
-                        { icon: Activity, title: "RAW TELEMETRY", desc: "Unfiltered battery metrics and vehicle diagnostics fed directly to your command centers in real-time." },
-                        { icon: BatteryCharging, title: "HYPER-CHARGE", desc: "Orchestrate charging cycles with militant efficiency to ensure absolute zero operational downtime." },
-                        { icon: ShieldAlert, title: "SECURE COMM.", desc: "Data protection built like a vault. Fleet metrics are air-gapped, encrypted, and impervious."}
-                    ].map((feat, i) => (
-                        <motion.div 
-                            key={i}
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-50px" }}
-                            transition={{ duration: 0.6, delay: i * 0.1 }}
-                            className="border border-[#333] p-8 bg-[#111] hover:bg-[#D4FF00] hover:text-black transition-colors group cursor-pointer"
-                        >
-                            <feat.icon className="w-16 h-16 mb-8 text-[#D4FF00] group-hover:text-black transition-colors" strokeWidth={1.5} />
-                            <h3 className="font-brutal text-3xl mb-4">{feat.title}</h3>
-                            <p className="font-dense font-medium text-gray-500 group-hover:text-gray-800 leading-relaxed text-lg">
-                                {feat.desc}
-                            </p>
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
-        </section>
+                <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+                    <motion.div 
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                    >
+                        <div className="inline-flex items-center space-x-2 px-3 py-1 bg-[#3b82f6]/10 border border-[#3b82f6]/30 rounded-full mb-8">
+                            <span className="w-2 h-2 rounded-full bg-[#3b82f6] animate-pulse"></span>
+                            <span className="text-[#3b82f6] text-xs font-bold font-['JetBrains_Mono'] uppercase tracking-wider">System Online V2.4</span>
+                        </div>
+                        <h1 className="text-5xl lg:text-7xl font-['Space_Grotesk'] font-bold text-[#ffffff] leading-[1.1] mb-6">
+                            EV Infrastructure <br/>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#10b981] to-[#3b82f6]">Command Center</span>
+                        </h1>
+                        <p className="text-xl text-[#cbd5e1] mb-4 font-['Space_Grotesk'] font-medium">
+                            Monitor. Optimize. Control.
+                        </p>
+                        <p className="text-lg text-[#64748b] mb-10 max-w-lg leading-relaxed">
+                            Real-time charging intelligence for modern fleets and smart cities. Aggregate data, predict demand, and scale your infrastructure seamlessly.
+                        </p>
+                        <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                            <Link to="/register" className="w-full sm:w-auto px-8 py-4 bg-[#10b981] text-white font-bold rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all flex items-center justify-center space-x-2 group">
+                                <span>Get Started</span>
+                                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            </Link>
+                            <Link to="/login" className="w-full sm:w-auto px-8 py-4 bg-transparent border border-[#cbd5e1]/20 text-[#ffffff] font-bold rounded-xl hover:bg-[#111827] transition-all flex items-center justify-center">
+                                <span>View Dashboard</span>
+                            </Link>
+                        </div>
+                    </motion.div>
 
-        {/* Brutalist Footer */}
-        <footer className="bg-neon-lime text-black py-20 px-6 md:px-10 relative z-10 overflow-hidden">
-            <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-end border-b-4 border-black pb-8">
-                <div>
-                   <h2 className="font-brutal text-7xl md:text-9xl leading-[0.8] mb-6">INITIATE<br/>COMM.</h2>
+                    {/* Hero Visual */}
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 1, delay: 0.2 }}
+                        className="relative hidden lg:block"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-tr from-[#10b981]/20 to-[#3b82f6]/20 rounded-3xl blur-2xl"></div>
+                        <div className="bg-[#111827] border border-[#10b981]/20 p-2 rounded-3xl shadow-2xl relative z-10">
+                            <div className="bg-[#0a0f18] rounded-2xl overflow-hidden border border-[#334155]/50 relative h-[400px]">
+                                {/* Mock UI Elements */}
+                                <div className="absolute inset-0 p-6 flex flex-col">
+                                    <div className="flex justify-between items-center mb-8 border-b border-[#334155] pb-4">
+                                        <div className="font-['Space_Grotesk'] text-[#ffffff] font-semibold">Global Telemetry</div>
+                                        <div className="font-['JetBrains_Mono'] text-[#10b981] text-xs flex items-center space-x-2">
+                                            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></span>
+                                            <span>LIVE_SYNC</span>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4 flex-1">
+                                        <div className="bg-[#111827] border border-[#334155] rounded-xl p-4 flex flex-col justify-between group hover:border-[#10b981]/50 transition-colors">
+                                            <Activity className="w-6 h-6 text-[#3b82f6] mb-4" />
+                                            <div>
+                                                <div className="text-[#64748b] text-xs mb-1">Active Sessions</div>
+                                                <div className="font-['JetBrains_Mono'] text-[#ffffff] text-2xl font-bold">1,204</div>
+                                            </div>
+                                        </div>
+                                        <div className="bg-[#111827] border border-[#334155] rounded-xl p-4 flex flex-col justify-between group hover:border-[#10b981]/50 transition-colors">
+                                            <Zap className="w-6 h-6 text-[#f59e0b] mb-4" />
+                                            <div>
+                                                <div className="text-[#64748b] text-xs mb-1">Power Output</div>
+                                                <div className="font-['JetBrains_Mono'] text-[#ffffff] text-2xl font-bold">8.4<span className="text-sm text-[#cbd5e1] ml-1">MW</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* Mock Map area */}
+                                    <div className="mt-4 h-32 bg-[#111827] border border-[#334155] rounded-xl relative overflow-hidden">
+                                         <div className="absolute top-1/4 left-1/4 w-3 h-3 bg-[#10b981] rounded-full shadow-[0_0_10px_#10b981] animate-ping"></div>
+                                         <div className="absolute top-1/2 left-2/3 w-3 h-3 bg-[#ef4444] rounded-full shadow-[0_0_10px_#ef4444] animate-pulse"></div>
+                                         <div className="absolute bottom-1/3 right-1/4 w-3 h-3 bg-[#f59e0b] rounded-full shadow-[0_0_10px_#f59e0b] animate-pulse"></div>
+                                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                            <MapPin className="w-8 h-8 text-[#334155] opacity-20" />
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
-                <div className="text-right mt-10 md:mt-0 font-bold text-xl uppercase">
-                   <p className="text-3xl font-brutal">SYSTEM.HQ © 2026</p>
-                   <p className="mt-2 text-black/60 font-dense">ALL PROTOCOLS OBSERVED.</p>
+            </section>
+
+            {/* Features Section */}
+            <section className="py-24 bg-[#0a0f18] border-t border-[#111827] relative">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl lg:text-4xl font-['Space_Grotesk'] font-bold text-[#ffffff] mb-4">Core Infrastructure Capabilities</h2>
+                        <p className="text-[#64748b] max-w-2xl mx-auto">Hardware-agnostic integration with predictive logic to keep your fleet moving.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {[
+                            { icon: Activity, title: "Real-time Monitoring", desc: "Live telemetry and status updates from every node in your charging network.", color: "#10b981" },
+                            { icon: Navigation, title: "Smart Routing", desc: "Dynamic geographical dispatch based on station availability and queue depth.", color: "#3b82f6" },
+                            { icon: BarChart3, title: "Demand Analytics", desc: "Granular utilization metrics and predictive peak-hour forecasting algorithms.", color: "#f59e0b" },
+                            { icon: Car, title: "Fleet Optimization", desc: "Automated booking and charging schedules matched to vehicle battery constraints.", color: "#ef4444" }
+                        ].map((feature, i) => (
+                            <motion.div 
+                                key={i}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                className="bg-[#111827] p-8 rounded-2xl border border-[#1f2937] hover:border-[#334155] transition-all group hover:-translate-y-1 relative overflow-hidden"
+                            >
+                                <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: feature.color }}></div>
+                                <feature.icon className="w-10 h-10 mb-6" style={{ color: feature.color }} />
+                                <h3 className="text-[#ffffff] font-['Space_Grotesk'] font-bold text-lg mb-3">{feature.title}</h3>
+                                <p className="text-[#64748b] text-sm leading-relaxed">{feature.desc}</p>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
-            </div>
-            <div className="max-w-7xl mx-auto pt-8 flex items-center justify-between font-brutal text-2xl uppercase">
-                <Link to="/login" className="hover:underline underline-offset-8">LOGIN SEQUENCE &rarr;</Link>
-                <div className="w-4 h-4 bg-black rounded-full shadow-[0_0_10px_0_#000] animate-pulse"></div>
-            </div>
-        </footer>
-      </div>
-    </>
-  );
+            </section>
+
+            {/* Visual / Data Section */}
+            <section className="py-24 bg-[#111827] border-y border-[#1f2937] relative overflow-hidden">
+                <div className="absolute left-0 top-0 w-1/3 h-full bg-gradient-to-r from-[#0a0f18] to-transparent z-10 hidden lg:block"></div>
+                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-20">
+                    <div>
+                        <h2 className="text-3xl lg:text-5xl font-['Space_Grotesk'] font-bold text-[#ffffff] mb-6 leading-tight">
+                            Geospatial <br/>
+                            <span className="text-[#3b82f6]">Command View</span>
+                        </h2>
+                        <p className="text-[#cbd5e1] mb-8 text-lg leading-relaxed">
+                            Track your entire grid on a unified operational map. Identify bottlenecks, monitor live capacity, and override automated systems with a single click.
+                        </p>
+                        
+                        <div className="space-y-4">
+                            {[
+                                { label: "Network Uptime", value: "99.98%", statColor: "text-[#10b981]" },
+                                { label: "Average Queue", value: "4.2 Min", statColor: "text-[#f59e0b]" },
+                                { label: "Critical Alerts", value: "0", statColor: "text-[#10b981]" }
+                            ].map((stat, i) => (
+                                <div key={i} className="flex items-center justify-between p-4 bg-[#0a0f18] rounded-xl border border-[#1f2937]">
+                                    <span className="text-[#64748b] font-medium">{stat.label}</span>
+                                    <span className={`font-['JetBrains_Mono'] font-bold text-xl ${stat.statColor}`}>{stat.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="bg-[#0a0f18] p-4 rounded-3xl border border-[#334155] shadow-2xl relative">
+                        {/* Mock Map Interface */}
+                        <div className="aspect-square sm:aspect-video rounded-2xl bg-[#0a0f18] border border-[#1f2937] relative overflow-hidden">
+                            {/* Grid lines */}
+                            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(#334155 1px, transparent 1px), linear-gradient(90deg, #334155 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+                            
+                            {/* Nodes */}
+                            <div className="absolute top-[20%] left-[30%]">
+                                <div className="w-16 h-16 border border-[#10b981]/50 rounded-full flex items-center justify-center animate-[spin_4s_linear_infinite]">
+                                    <div className="w-4 h-4 bg-[#10b981] rounded-full shadow-[0_0_15px_#10b981]"></div>
+                                </div>
+                                <div className="absolute top-1/2 left-full ml-4 -translate-y-1/2 bg-[#111827] border border-[#10b981]/30 p-2 rounded-lg text-xs font-['JetBrains_Mono'] text-[#10b981] whitespace-nowrap hidden sm:block">
+                                    STATION_ALPHA [8/8]
+                                </div>
+                            </div>
+
+                            <div className="absolute top-[60%] left-[70%]">
+                                <div className="w-20 h-20 border border-[#f59e0b]/50 rounded-full flex items-center justify-center relative">
+                                    <div className="absolute inset-0 border border-[#f59e0b]/20 rounded-full animate-ping"></div>
+                                    <div className="w-4 h-4 bg-[#f59e0b] rounded-full shadow-[0_0_15px_#f59e0b]"></div>
+                                </div>
+                                <div className="absolute top-1/2 right-full mr-4 -translate-y-1/2 bg-[#111827] border border-[#f59e0b]/30 p-2 rounded-lg text-xs font-['JetBrains_Mono'] text-[#f59e0b] whitespace-nowrap hidden sm:block">
+                                    STATION_BETA [4/8] WAIT: 12M
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Insights / Intelligence Section */}
+            <section className="py-24 px-6 relative bg-[#0a0f18]">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <div className="inline-flex items-center space-x-2 px-3 py-1 bg-[#10b981]/10 border border-[#10b981]/30 rounded-full mb-4">
+                            <Cpu className="w-4 h-4 text-[#10b981]" />
+                            <span className="text-[#10b981] text-xs font-bold font-['JetBrains_Mono'] uppercase tracking-wider">Nexus AI Engine</span>
+                        </div>
+                        <h2 className="text-3xl lg:text-4xl font-['Space_Grotesk'] font-bold text-[#ffffff]">Actionable Intelligence</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {[
+                            { 
+                                icon: ShieldAlert, 
+                                action: "Add station in high-demand area", 
+                                metric: "Zone 4 utilization at 98%",
+                                effect: "+15% Grid Efficiency",
+                                color: "border-[#ef4444]/30 bg-[#ef4444]/5 text-[#ef4444]"
+                            },
+                            { 
+                                icon: Clock, 
+                                action: "Reduce wait time by 30%", 
+                                metric: "Shift fleet charging to off-peak",
+                                effect: "-$2,400 Monthly Cost",
+                                color: "border-[#10b981]/30 bg-[#10b981]/5 text-[#10b981]"
+                            },
+                            { 
+                                icon: Zap, 
+                                action: "Optimize underutilized infrastructure", 
+                                metric: "Station Gamma idle for 4hrs",
+                                effect: "Re-route inbound vehicles",
+                                color: "border-[#f59e0b]/30 bg-[#f59e0b]/5 text-[#f59e0b]"
+                            }
+                        ].map((insight, i) => (
+                            <motion.div 
+                                key={i}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                className={`border ${insight.color.split(' ')[0]} bg-[#111827] rounded-2xl p-6 relative overflow-hidden hover:-translate-y-1 transition-transform`}
+                            >
+                                <div className={`absolute top-0 left-0 w-full h-1 ${insight.color.split(' ')[1]}`}></div>
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${insight.color.split(' ')[1]}`}>
+                                    <insight.icon className={`w-5 h-5 ${insight.color.split(' ')[2]}`} />
+                                </div>
+                                <h3 className="text-[#ffffff] font-bold text-lg mb-2 leading-tight font-['Space_Grotesk']">{insight.action}</h3>
+                                <p className="text-[#64748b] text-sm mb-6">{insight.metric}</p>
+                                <div className="mt-auto inline-block px-3 py-1.5 bg-[#0a0f18] rounded-lg border border-[#1f2937] font-['JetBrains_Mono'] text-xs font-bold text-[#cbd5e1]">
+                                    Expected: {insight.effect}
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* CTA Section */}
+            <section className="py-32 relative border-t border-[#1f2937] bg-[#111827] overflow-hidden">
+                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+                    <div className="w-[800px] h-[800px] border border-[#10b981] rounded-full"></div>
+                    <div className="w-[600px] h-[600px] border border-[#10b981] rounded-full absolute"></div>
+                    <div className="w-[400px] h-[400px] border border-[#10b981] rounded-full absolute"></div>
+                </div>
+                <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+                    <h2 className="text-4xl lg:text-6xl font-['Space_Grotesk'] font-bold text-[#ffffff] mb-8">
+                        Take control of your EV infrastructure today
+                    </h2>
+                    <Link to="/login" className="inline-flex items-center space-x-3 px-10 py-5 bg-[#10b981] hover:bg-[#059669] text-white text-lg font-bold rounded-xl transition-all shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:shadow-[0_0_50px_rgba(16,185,129,0.5)]">
+                        <span>Launch Dashboard</span>
+                        <ChevronRight className="w-6 h-6" />
+                    </Link>
+                </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="bg-[#0a0f18] border-t border-[#111827] py-12">
+                <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
+                    <div className="flex items-center space-x-2 mb-8 opacity-50">
+                        <Zap className="w-5 h-5 text-[#cbd5e1]" />
+                        <span className="text-[#ffffff] font-['Space_Grotesk'] font-bold text-xl tracking-tight">NEXUS.EV</span>
+                    </div>
+                    <div className="flex space-x-8 mb-8 text-sm text-[#64748b] font-medium flex-wrap justify-center gap-y-4">
+                        <Link to="#" className="hover:text-[#cbd5e1] transition-colors">Platform</Link>
+                        <Link to="#" className="hover:text-[#cbd5e1] transition-colors">Documentation</Link>
+                        <Link to="#" className="hover:text-[#cbd5e1] transition-colors">API Reference</Link>
+                        <Link to="#" className="hover:text-[#cbd5e1] transition-colors">Support</Link>
+                    </div>
+                    <p className="text-[#64748b] text-sm">All rights reserved @2026</p>
+                </div>
+            </footer>
+        </div>
+    );
 };
 
 export default Landing;

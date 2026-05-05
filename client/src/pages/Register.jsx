@@ -1,14 +1,15 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { KeyRound, Mail, Zap, User as UserIcon, Car } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Register = () => {
+    const location = useLocation();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('User');
+    const [role, setRole] = useState(location.state?.defaultRole || 'User');
     const [vehicleNumber, setVehicleNumber] = useState('');
     const [vehicleModel, setVehicleModel] = useState('');
     const [error, setError] = useState('');
